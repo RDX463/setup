@@ -85,6 +85,7 @@ install_linux_tools() {
     case "$distro" in
         (ubuntu)
             run_cmd "sudo apt install -y git vlc libreoffice clang docker.io gh jupyter-notebook gcc default-jre default-jdk"
+            run_cmd "flatpak install flathub org.figma.Figma"
             ;;
         (arch)
             run_cmd "sudo pacman -S --noconfirm git vlc libreoffice-fresh clang docker github-cli jupyter-notebook gcc jdk-openjdk"
@@ -101,6 +102,7 @@ install_linux_tools() {
             ;;
         (fedora)
             run_cmd "sudo dnf install -y git vlc libreoffice clang docker-ce gh jupyter-notebook gcc java-21-openjdk"
+            run_cmd "flatpak install flathub io.github.Figma_Linux.figma_linux"
             ;;
         (*)
             echo "No tool installation defined for $distro"
