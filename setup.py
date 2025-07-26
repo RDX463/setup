@@ -72,6 +72,11 @@ def setup_flatpak():
             run_cmd("sudo apt install -y flatpak gnome-software-plugin-flatpak")
         elif distro == "arch":
             run_cmd("sudo pacman -S --noconfirm flatpak")
+            run_cmd ("sudo pacman -S --noconfirm base-devel git")
+            run_cmd ("git clone https://aur.archlinux.org/yay.git")
+            run_cmd ("cd yay && makepkg -si && cd .. --noconfirm")
+            run_cmd ("rm -rf yay")
+            run_cmd("yay -S figma-linux-bin")
         elif distro == "fedora":
             run_cmd("sudo dnf install -y flatpak")
     
@@ -88,9 +93,9 @@ def install_linux_tools():
     print(f"Installing tools for {distro}...")
 
     base_install = {
-        "ubuntu": "sudo apt install -y git vlc libreoffice clang docker.io gh jupyter-notebook",
-        "arch": "sudo pacman -S --noconfirm git vlc libreoffice-fresh clang docker github-cli jupyter-notebook",
-        "fedora": "sudo dnf install -y git vlc libreoffice clang docker-ce gh jupyter-notebook"
+        "ubuntu": "sudo apt install -y git vlc libreoffice clang docker.io gh jupyter-notebook gcc clang",
+        "arch": "sudo pacman -S --noconfirm git vlc libreoffice-fresh clang docker github-cli jupyter-notebook gcc clang",
+        "fedora": "sudo dnf install -y git vlc libreoffice clang docker-ce gh jupyter-notebook gcc clang"
     }
 
     if distro in base_install:

@@ -7,8 +7,8 @@ This script (`setup.py`) automates the installation of Python and a set of devel
 - **Cross-Platform Support**: Works on Linux (Ubuntu, Arch, Fedora) and Windows.
 - **Python Installation**: Installs Python 3 and pip if not already present.
 - **Tool Installation**:
-  - Linux: Installs tools like Git, VLC, LibreOffice, Clang, Docker, GitHub CLI, and Jupyter Notebook via native package managers. Also installs Flatpak and applications like Telegram, PyCharm, Google Chrome, and Brave Browser.
-  - Windows: Installs tools like Git, PyCharm, Telegram, Google Chrome, Brave Browser, and Visual Studio Community using winget, plus Jupyter Notebook via pip.
+  - Linux: Installs tools like Git, VLC, LibreOffice, Clang, Docker, GitHub CLI,Figma,Clang,GCC, and Jupyter Notebook via native package managers. Also installs Flatpak and applications like Telegram, PyCharm, Google Chrome, and Brave Browser.
+  - Windows: Installs tools like Git, PyCharm, Telegram, Google Chrome, Brave Browser,Figma,MongoDB and Visual Studio Community using winget, plus Jupyter Notebook via pip.
 - **Error Handling**: Provides detailed error messages and skips non-critical failures to ensure partial success.
 - **Idempotency**: Checks for existing installations to avoid redundant setups.
 
@@ -34,6 +34,8 @@ This script (`setup.py`) automates the installation of Python and a set of devel
 2. **Run the Script**:
    ```bash
    python3 setup.py
+
+   ./setup.sh
    ```
 
 3. **Follow Prompts**:
@@ -52,11 +54,14 @@ This script (`setup.py`) automates the installation of Python and a set of devel
   - Docker
   - GitHub CLI
   - Jupyter Notebook
+  - GCC
+  - Yay(arch)
 - **Flatpak Applications** (via Flathub):
   - Telegram
   - PyCharm Community
   - Google Chrome
   - Brave Browser
+  - Figma
 
 ### Windows
 - **winget Packages**:
@@ -66,6 +71,8 @@ This script (`setup.py`) automates the installation of Python and a set of devel
   - Google Chrome
   - Brave Browser
   - Microsoft Visual Studio Community 2022
+  - Visual Studio Code
+  - Figma
 - **pip Packages**:
   - Jupyter Notebook
 
