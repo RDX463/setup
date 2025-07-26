@@ -84,13 +84,23 @@ install_linux_tools() {
 
     case "$distro" in
         (ubuntu)
-            run_cmd "sudo apt install -y git vlc libreoffice clang docker.io gh jupyter-notebook"
+            run_cmd "sudo apt install -y git vlc libreoffice clang docker.io gh jupyter-notebook gcc default-jre default-jdk"
             ;;
         (arch)
-            run_cmd "sudo pacman -S --noconfirm git vlc libreoffice-fresh clang docker github-cli jupyter-notebook"
+            run_cmd "sudo pacman -S --noconfirm git vlc libreoffice-fresh clang docker github-cli jupyter-notebook gcc jdk-openjdk"
+            if ! is_installed yay; then
+                echo "Installing yay for Arch Linux..."
+                run_cmd "sudo pacman -S --noconfirm base-devel git"
+                run_cmd "git clone https://aur.archlinux.org/yay.git"
+                run_cmd "cd yay && makepkg -si && cd .. --noconfirm"
+                run_cmd "rm -rf yay"
+            else
+                echo "yay is already installed."
+            fi
+            run_cmd "yay -S figma-linux-bin"
             ;;
         (fedora)
-            run_cmd "sudo dnf install -y git vlc libreoffice clang docker-ce gh jupyter-notebook"
+            run_cmd "sudo dnf install -y git vlc libreoffice clang docker-ce gh jupyter-notebook gcc java-21-openjdk"
             ;;
         (*)
             echo "No tool installation defined for $distro"
