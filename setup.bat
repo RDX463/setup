@@ -1,133 +1,90 @@
 @echo off
 setlocal EnableDelayedExpansion
+title 📦 Developer Tools Full Setup
 
-:: Initialize log file
-set "LOGFILE=%~dp0setup.log"
-echo Setup script started at %DATE% %TIME% >> "%LOGFILE%"
-
-:: Check for administrative privileges
-echo Checking for administrative privileges... >> "%LOGFILE%"
-net session >nul 2>&1
-if %ERRORLEVEL% neq 0 (
-    echo This script requires administrative privileges. Please run as Administrator. >> "%LOGFILE%"
-    echo This script requires administrative privileges. Please run as Administrator.
-    pause
-    exit /b 1
-)
-
-:: Function to run a command and handle errors
-:run_cmd
-set "cmd=%~1"
-echo Running: %cmd% >> "%LOGFILE%"
-echo Running: %cmd%
-%cmd% >> "%LOGFILE%" 2>&1
-if %ERRORLEVEL% neq 0 (
-    echo Failed: %cmd% >> "%LOGFILE%"
-    echo Failed: %cmd%
-    pause
-    exit /b 1
-)
-exit /b 0
-
-:: Function to check if a command is available
-:is_installed
-where %1 >nul 2>&1
-if %ERRORLEVEL% equ 0 (
-    echo %1 is installed. >> "%LOGFILE%"
-    exit /b 0
-) else (
-    echo %1 is not installed. >> "%LOGFILE%"
-    exit /b 1
-)
-goto :eof
-
-:: Function to check if Python is installed
-:is_python_installed
-call :is_installed python3
-if %ERRORLEVEL% equ 0 exit /b 0
-call :is_installed python
-if %ERRORLEVEL% equ 0 exit /b 0
-call :is_installed py
-if %ERRORLEVEL% equ 0 exit /b 0
-echo Python is not installed. >> "%LOGFILE%"
-exit /b 1
-goto :eof
-
-:: Function to install Python
-:install_python_windows
-echo Installing Python... >> "%LOGFILE%"
-echo Installing Python...
-call :run_cmd "winget install -e --id Python.Python.3 --accept-package-agreements --accept-source-agreements"
-:: Update PATH to include Python
-for /f "tokens=2*" %%a in ('reg query "HKLM\Software\Python\PythonCore" /s /v InstallPath ^| findstr InstallPath') do (
-    set "PYTHON_PATH=%%b\Scripts"
-    set "PATH=%PATH%;%%b;%PYTHON_PATH%"
-    echo Updated PATH with Python: %%b;%PYTHON_PATH% >> "%LOGFILE%"
-)
-exit /b 0
-
-:: Function to install Windows tools
-:install_windows_tools
-echo Installing Windows tools with winget... >> "%LOGFILE%"
-echo Installing Windows tools with winget...
-
-set "apps=Git.Git JetBrains.PyCharm.Community Telegram.TelegramDesktop Google.Chrome Brave.Brave Microsoft.VisualStudio.2022.Community"
-
-for %%a in (%apps%) do (
-    echo Checking if %%a is installed... >> "%LOGFILE%"
-    echo Checking if %%a is installed...
-    winget list --id %%a --exact | findstr /C:"%%a" >nul 2>&1
-    if !ERRORLEVEL! equ 0 (
-        echo %%a is already installed. >> "%LOGFILE%"
-        echo %%a is already installed.
-    ) else (
-        call :run_cmd "winget install -e --id %%a --accept-package-agreements --accept-source-agreements"
-    )
-)
-
-:: Check if Jupyter is installed
-echo Checking for Jupyter Notebook... >> "%LOGFILE%"
-echo Checking for Jupyter Notebook...
-where jupyter >nul 2>&1
-if %ERRORLEVEL% neq 0 (
-    echo Installing Jupyter Notebook... >> "%LOGFILE%"
-    echo Installing Jupyter Notebook...
-    call :run_cmd "pip install notebook"
-) else (
-    echo Jupyter Notebook is already installed. >> "%LOGFILE%"
-    echo Jupyter Notebook is already installed.
-)
-exit /b 0
-
-:: Main script
-echo Detected OS: Windows >> "%LOGFILE%"
-echo Detected OS: Windows
+echo === Setup Script Started at %DATE% %TIME% ===
+echo.
 
 :: Check for winget
-echo Checking for winget... >> "%LOGFILE%"
+echo 🔍 Checking for winget...
 where winget >nul 2>&1
 if %ERRORLEVEL% neq 0 (
-    echo winget is not installed or not found in PATH. Please install Windows Package Manager. >> "%LOGFILE%"
-    echo winget is not installed or not found in PATH. Please install Windows Package Manager.
+    echo ❌ winget not found! Please install Windows Package Manager.
     pause
     exit /b 1
+) else (
+    echo ✅ winget found.
 )
 
 :: Check for Python
-echo Checking for Python... >> "%LOGFILE%"
-call :is_python_installed
+echo.
+echo 🔍 Checking for Python...
+where python >nul 2>&1
 if %ERRORLEVEL% neq 0 (
-    echo Python not found. Installing Python... >> "%LOGFILE%"
-    echo Python not found. Installing Python...
-    call :install_python_windows
+    echo ❌ Python not found!
+    echo Installing Python...
+    winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements
 ) else (
-    echo Python is already installed. >> "%LOGFILE%"
-    echo Python is already installed.
+    echo ✅ Python already installed.
 )
 
-call :install_windows_tools
+:: Upgrade pip
+echo.
+echo 🔄 Upgrading pip...
+python -m pip install --upgrade pip
 
-echo Setup complete. >> "%LOGFILE%"
-echo Setup complete.
+:: Install Jupyter Notebook
+echo.
+echo 📦 Installing Jupyter Notebook...
+python -m pip install notebook
+
+:: Install Visual Studio Code
+echo.
+echo 🖥️ Installing Visual Studio Code...
+winget install -e --id Microsoft.VisualStudioCode --accept-package-agreements --accept-source-agreements
+
+:: Install Git
+echo.
+echo 🔧 Installing Git...
+winget install -e --id Git.Git --accept-package-agreements --accept-source-agreements
+
+:: Install Node.js
+echo.
+echo 🌐 Installing Node.js LTS...
+winget install -e --id OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements
+
+:: Install Brave Browser
+echo.
+echo 🦁 Installing Brave Browser...
+winget install -e --id Brave.Brave --accept-package-agreements --accept-source-agreements
+
+:: Install Figma
+echo.
+echo 🎨 Installing Figma...
+winget install -e --id Figma.Figma --accept-package-agreements --accept-source-agreements
+
+:: Install MongoDB Compass
+echo.
+echo 🗃️ Installing MongoDB Compass...
+winget install -e --id MongoDB.Compass.Full --accept-package-agreements --accept-source-agreements
+
+:: Install Java (OpenJDK 21)
+echo.
+echo ☕ Installing Java JDK 21...
+winget install -e --id EclipseAdoptium.Temurin.21.JDK --accept-package-agreements --accept-source-agreements
+
+:: Install C++ Build Tools
+echo.
+echo 🛠️ Installing C++ Build Tools...
+winget install -e --id Microsoft.VisualStudio.2022.BuildTools --accept-package-agreements --accept-source-agreements
+
+:: Install Google Chrome
+echo.
+echo 🌐 Installing Google Chrome...
+winget install -e --id Google.Chrome --accept-package-agreements --accept-source-agreements
+
+echo.
+echo ✅✅✅ All tools installed successfully!
+echo === Setup Completed at %DATE% %TIME% ===
 pause
 exit /b 0
